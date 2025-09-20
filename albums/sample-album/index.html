@@ -79,40 +79,45 @@ function buildPages(){
   flipbookEl.appendChild(cover);
 
   // 2. Add pages in pairs (double-page view)
-  for(let i=0;i<images.length;i++){
+  images.forEach(name=>{
     const div = document.createElement('div');
     div.className='page';
     const img = document.createElement('img');
-    img.src = imgFolder + '/' + images[i];
-    img.alt = images[i];
+    img.src = imgFolder + '/' + name;
+    img.alt = name;
     div.appendChild(img);
     flipbookEl.appendChild(div);
-  }
+  });
 
+  // Initialize Turn.js for left-right 3D flip, double-page view
   $('#flipbook').turn({
     width: Math.min(window.innerWidth*0.95, 1200),
     height: Math.min(window.innerHeight*0.85, 800),
     autoCenter: true,
     display: 'double',
     acceleration: true,
-    direction: 'ltr'
+    direction: 'ltr',   // left-to-right flip
   });
 }
 
 async function init(){
   await findImages();
   buildPages();
+
+  // Keyboard navigation
   document.addEventListener('keydown', e=>{
     if(e.key==='ArrowRight') $('#flipbook').turn('next');
     if(e.key==='ArrowLeft') $('#flipbook').turn('previous');
   });
+
+  // Button navigation
+  document.getElementById('prevBtn').addEventListener('click', ()=>$('#flipbook').turn('previous'));
+  document.getElementById('nextBtn').addEventListener('click', ()=>$('#flipbook').turn('next'));
 }
 
 init();
 
-document.getElementById('prevBtn').addEventListener('click', ()=>$('#flipbook').turn('previous'));
-document.getElementById('nextBtn').addEventListener('click', ()=>$('#flipbook').turn('next'));
-
+// Copy link button
 document.getElementById('copyLink').addEventListener('click', ()=>{
   navigator.clipboard.writeText(location.href).then(()=>{ alert('Link copied to clipboard'); })
   .catch(()=>{ prompt('Copy this link', location.href); });
