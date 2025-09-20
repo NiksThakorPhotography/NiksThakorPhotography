@@ -6,12 +6,12 @@
     "thumb": "albums/sample-album/thumb.jpg",
     "path": "albums/sample-album"
   }
-]
-
-{
-  "id":"Visu-Puni",
-  "title":"Visu & Puni",
-  "date":"12 Sep 2025",
-  "thumb":"albums/Visu-Puni/thumb.jpg",
-  "path":"albums/Visu-Puni"
+  {
+  "id": "visu-puni",
+  "title": "Visu & Puni",
+  "date": "20 Sep 2025",
+  "thumb": "albums/Visu-Puni/thumb.jpg",
+  "path": "albums/Visu-Puni"
 }
+
+]
