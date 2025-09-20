@@ -7,3 +7,11 @@
     "path": "albums/sample-album"
   }
 ]
+
+{
+  "id":"Visu-Puni",
+  "title":"Rahul & Neha",
+  "date":"12 Sep 2025",
+  "thumb":"albums/rahul-neha/thumb.jpg",
+  "path":"albums/rahul-neha"
+}
