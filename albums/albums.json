@@ -1,0 +1,9 @@
+[
+  {
+    "id": "sample-album",
+    "title": "Sample Album",
+    "date": "Demo",
+    "thumb": "albums/sample-album/thumb.jpg",
+    "path": "albums/sample-album"
+  }
+]

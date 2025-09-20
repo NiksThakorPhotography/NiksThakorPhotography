@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sample Album — NiksThakorPhotography</title>
+
+  <style>
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:#061226;color:#eef2f7}
+    header{padding:12px;display:flex;align-items:center;justify-content:space-between}
+    h1{font-size:18px;margin:0}
+    .viewer-wrap{display:flex;flex-direction:column;align-items:center;padding:12px}
+    #flipbook{width:90%;max-width:1000px;height:70vh;margin-top:10px}
+    .page{background:#fff;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .page img{width:100%;height:100%;object-fit:contain}
+    .controls{margin-top:10px;display:flex;gap:8px;align-items:center}
+    .btn{background:#0f1724;padding:8px 12px;border-radius:8px;color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,0.04)}
+    .caption{color:#9aa4b2;margin-top:8px}
+    #playOverlay{position:fixed;left:16px;bottom:16px}
+    @media (max-width:560px){#flipbook{height:55vh}}
+  </style>
+</head>
+<body>
+  <header>
+    <div><h1>Sample Album</h1><div style="color:#9aa4b2;font-size:13px">NiksThakorPhotography</div></div>
+    <div>
+      <a class="btn" id="copyLink">Copy Link</a>
+      <a class="btn" href="../">Back</a>
+    </div>
+  </header>
+
+  <div class="viewer-wrap">
+    <div id="flipbook"></div>
+    <div class="controls">
+      <a class="btn" id="prevBtn">Prev</a>
+      <a class="btn" id="nextBtn">Next</a>
+      <a class="btn" id="downloadBtn">Download Current</a>
+      <a class="btn" id="shareBtn">Share (mobile)</a>
+    </div>
+    <div class="caption" id="caption">Swipe or click to flip pages. To add music, upload <code>bgm.mp3</code> in this album folder.</div>
+  </div>
+
+  <!-- Load libraries from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
+
+  <script>
+    // Auto-detect images named 01.jpg, 02.jpg, ... and build flipbook
+    const maxTry = 200;
+    const imgFolder = 'images';
+    const flipbookEl = document.getElementById('flipbook');
+    let images = [];
+    let currentIndex = 0;
+
+    function pad(n){return String(n).padStart(2,'0');}
+    function testImage(src){ return new Promise(resolve=>{ const img=new Image(); img.onload=()=>resolve(true); img.onerror=()=>resolve(false); img.src=src; }); }
+
+    async function findImages(){
+      for(let i=1;i<=maxTry;i++){
+        const name = pad(i) + '.jpg';
+        const src = imgFolder + '/' + name;
+        const ok = await testImage(src);
+        if(ok) images.push(name);
+        else if(images.length>0) break; // stop after a gap (once we've found some images)
+      }
+    }
+
+    function buildPages(){
+      if(images.length===0){
+        flipbookEl.innerHTML = '<div style="padding:28px;background:#fff;border-radius:8px;color:#111">Koi bhi image nahi mili. Upload images/01.jpg, 02.jpg ...</div>';
+        return;
+      }
+      flipbookEl.innerHTML = '';
+      images.forEach((name, idx)=>{
+        const div = document.createElement('div'); div.className='page';
+        const img = document.createElement('img'); img.src = imgFolder + '/' + name; img.alt = name;
+        div.appendChild(img);
+        flipbookEl.appendChild(div);
+      });
+      // initialize turn
+      $('#flipbook').turn({
+        width: Math.min(window.innerWidth*0.95, 1000),
+        height: Math.min(window.innerHeight*0.75, 700),
+        autoCenter: true
+      });
+    }
+
+    async function init(){
+      await findImages();
+      buildPages();
+      // keyboard nav
+      document.addEventListener('keydown', e=>{
+        if(e.key==='ArrowRight') $('#flipbook').turn('next');
+        if(e.key==='ArrowLeft') $('#flipbook').turn('previous');
+      });
+    }
+
+    init();
+
+    // prev/next buttons
+    document.getElementById('prevBtn').addEventListener('click', ()=> $('#flipbook').turn('previous'));
+    document.getElementById('nextBtn').addEventListener('click', ()=> $('#flipbook').turn('next'));
+
+    // copy link
+    document.getElementById('copyLink').addEventListener('click', ()=>{
+      navigator.clipboard.writeText(location.href).then(()=>{
+        alert('Link copied to clipboard');
+      }).catch(()=>{ prompt('Copy this link', location.href); });
+    });
+
+    // download current page image (best-effort)
+    document.getElementById('downloadBtn').addEventListener('click', ()=>{
+      try{
+        const pageIndex = $('#flipbook').turn('page') - 1;
+        const imgName = images[pageIndex];
+        const a = document.createElement('a'); a.href = imgFolder + '/' + imgName; a.download = imgName; document.body.appendChild(a); a.click(); a.remove();
+      }catch(e){ alert('Download failed'); }
+    });
+
+    // share (mobile)
+    document.getElementById('shareBtn').addEventListener('click', async ()=>{
+      if(navigator.share){ try{ await navigator.share({title:document.title,text:'Check this album',url:location.href}); }catch(e){} }
+      else{ prompt('Copy link', location.href); }
+    });
+
+    // Audio: try to load bgm.mp3 if present
+    const bgm = new Audio('bgm.mp3'); bgm.loop = true;
+    bgm.addEventListener('canplay', ()=>{ // show small play control if available
+      const playBtn = document.createElement('a'); playBtn.className='btn'; playBtn.textContent='Play Music'; playBtn.style.marginLeft='8px';
+      playBtn.addEventListener('click', ()=> bgm.play());
+      document.querySelector('.controls').appendChild(playBtn);
+    });
+    // error event ignored (file not present)
+  </script>
+</body>
+</html>
