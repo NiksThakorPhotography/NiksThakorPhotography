@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NiksThakorPhotography — Clients Albums</title>
+  <link rel="icon" href="/favicon.png" />
+  <style>
+    :root{--bg:#0b1220;--card:#0f1724;--muted:#9aa4b2;--accent:#f59e0b}
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#071023 0%,#081224 100%);color:#eef2f7}
+    .wrap{max-width:1100px;margin:28px auto;padding:18px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    h1{font-size:22px;margin:0}
+    .sub{color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:18px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:10px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
+    .card img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+    .meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:14px;color:var(--muted)}
+    a.button{display:inline-block;padding:8px 12px;border-radius:10px;background:var(--card);color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,0.04)}
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    .top-actions{display:flex;gap:8px;align-items:center;margin-top:8px}
+    @media (max-width:560px){.card img{height:130px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>NiksThakorPhotography</h1>
+        <div class="sub">Aapke clients ke virtual wedding e-albums yahan. Har album ka unique link share karein.</div>
+      </div>
+      <div class="top-actions">
+        <a class="button" href="albums/sample-album/">Dekhein Sample Album</a>
+        <a class="button" href="README.html">Kaise add kare (Guide)</a>
+      </div>
+    </header>
+
+    <section id="albumsSection">
+      <h2 style="margin-top:20px">Clients Albums</h2>
+      <div id="albumGrid" class="grid">
+        <!-- Album cards are loaded from albums/albums.json -->
+        <div class="card">
+          <img src="albums/sample-album/thumb.jpg" alt="Sample">
+          <div class="meta"><strong>Sample Album</strong><small>Demo</small></div>
+          <div style="margin-top:10px"><a class="button" href="albums/sample-album/">Open Album</a></div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Note: Ye site GitHub Pages par easily host hoti hai. Har naya client add karne ke liye <code>albums/</code> me naya folder bana kar usme images daalein aur <code>albums/albums.json</code> me entry add karein.
+    </footer>
+  </div>
+
+  <script>
+    // Try to load albums/albums.json to render cards dynamically (optional; you can also edit index.html manually)
+    fetch('albums/albums.json').then(r=>{
+      if(!r.ok) throw new Error('no json');
+      return r.json();
+    }).then(list=>{
+      const grid = document.getElementById('albumGrid');
+      grid.innerHTML = '';
+      for(const a of list){
+        const div = document.createElement('div'); div.className='card';
+        const img = document.createElement('img'); img.src = a.thumb || (a.path + '/thumb.jpg');
+        img.alt = a.title;
+        const meta = document.createElement('div'); meta.className='meta';
+        meta.innerHTML = `<strong>${a.title}</strong><small>${a.date||''}</small>`;
+        const linkDiv = document.createElement('div'); linkDiv.style.marginTop='10px';
+        const link = document.createElement('a'); link.className='button'; link.href = a.path + '/'; link.textContent = 'Open Album';
+        linkDiv.appendChild(link);
+        div.appendChild(img); div.appendChild(meta); div.appendChild(linkDiv);
+        grid.appendChild(div);
+      }
+    }).catch(e=>{ /* ignore: fallback static card already present */ });
+  </script>
+</body>
+</html>

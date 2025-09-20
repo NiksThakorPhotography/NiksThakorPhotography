@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Guide — NiksThakorPhotography</title>
+<style>body{font-family:Arial,Helvetica,sans-serif;padding:18px;line-height:1.6;color:#111}pre{background:#f4f4f4;padding:12px;border-radius:6px;overflow:auto}</style>
+</head><body>
+<h1>Kaise use kare — Deploy & Maintain (Step-by-step)</h1>
+<ol>
+<li><strong>GitHub account banaye:</strong> <em>github.com</em> par jaaye aur free account create karein.</li>
+<li><strong>Repository banaye:</strong> New -> Repository; name: <code>NiksThakorPhotography</code>; Public; Create repository.</li>
+<li><strong>Files upload karein:</strong> Repository page par &quot;Add file&quot; → &quot;Upload files&quot; → saare site files drag &amp; drop karke commit karein.</li>
+<li><strong>GitHub Pages enable karein:</strong> Repository &rarr; Settings &rarr; Pages (left menu) &rarr; Branch: <code>main</code> (root) &rarr; Save. Aapki site publish ho jaayegi at <code>https://&lt;your-github-username&gt;.github.io/NiksThakorPhotography/</code></li>
+<li><strong>Naya album add karna (manual, asaan):</strong>
+  <ul>
+    <li>Repo me <code>albums/</code> folder banaye (agar nahi hai).</li>
+    <li>Ek naya folder banaye example <code>albums/rahul-neha</code>.</li>
+    <li>Folder ke andar ek subfolder banaye <code>images/</code> aur apni photos wahan upload karein named <code>01.jpg, 02.jpg, 03.jpg...</code>. (Sequential naming recommended)</li>
+    <li>Agar music chahiye to same album folder me ek file <code>bgm.mp3</code> upload karein.</li>
+    <li>Repo me <code>albums/albums.json</code> file ko edit karein aur naya object add karein:
+<pre>[
+  {
+    "id":"rahul-neha",
+    "title":"Rahul & Neha",
+    "date":"12 Sep 2025",
+    "thumb":"albums/rahul-neha/thumb.jpg",
+    "path":"albums/rahul-neha"
+  }
+]</pre>
+    </li>
+  </ul>
+</li>
+<li><strong>Album URL kis tarah share karein:</strong> Example: <code>https://&lt;your-github-username&gt;.github.io/NiksThakorPhotography/albums/rahul-neha/</code> — ye link client ko bhej dein.</li>
+<li><strong>Tip:</strong> Thumbnail (thumb.jpg) upload karein jo album listing me dikhai dega. Agar nahi hai to first image use hoti hai.</li>
+</ol>
+<p>Agar aap chahen to mai aapko step-by-step GitHub par upload karte hue guide kar sakta hoon — main har click batata chalunga.</p>
+</body></html>
