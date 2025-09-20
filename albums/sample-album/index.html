@@ -40,7 +40,7 @@ h1{font-size:18px;margin:0;}
 
 <script>
 const maxTry = 200;
-const imgFolder = 'images'; // images folder inside sample-album
+const imgFolder = 'images';
 const flipbookEl = document.getElementById('flipbook');
 let images = [];
 
@@ -69,13 +69,25 @@ function buildPages(){
     flipbookEl.innerHTML = '<div style="padding:28px;background:#fff;border-radius:8px;color:#111">Koi image nahi mili.</div>';
     return;
   }
+
   flipbookEl.innerHTML = '';
-  images.forEach(name=>{
-    const div = document.createElement('div'); div.className='page';
-    const img = document.createElement('img'); img.src = imgFolder + '/' + name; img.alt = name;
+
+  // 1. Add cover page (blank left)
+  const cover = document.createElement('div');
+  cover.className = 'page';
+  cover.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:24px;color:#555;">Cover</div>';
+  flipbookEl.appendChild(cover);
+
+  // 2. Add pages in pairs (double-page view)
+  for(let i=0;i<images.length;i++){
+    const div = document.createElement('div');
+    div.className='page';
+    const img = document.createElement('img');
+    img.src = imgFolder + '/' + images[i];
+    img.alt = images[i];
     div.appendChild(img);
     flipbookEl.appendChild(div);
-  });
+  }
 
   $('#flipbook').turn({
     width: Math.min(window.innerWidth*0.95, 1200),
